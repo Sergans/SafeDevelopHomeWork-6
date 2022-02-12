@@ -1,4 +1,6 @@
 ﻿using SafeDevelopLesson_6_1.Models;
+using MongoDB.Bson;
+using MongoDB.Driver;
 
 namespace SafeDevelopLesson_6_1.Data
 {
@@ -6,7 +8,10 @@ namespace SafeDevelopLesson_6_1.Data
     {
         public void Create(BookModel book)
         {
-            throw new NotImplementedException();
+            string connectionString = "mongodb://localhost:27017";
+            MongoClient client = new MongoClient(connectionString);
+            IMongoDatabase database = client.GetDatabase("test");
+            
         }
 
         public void Delete(int id)
