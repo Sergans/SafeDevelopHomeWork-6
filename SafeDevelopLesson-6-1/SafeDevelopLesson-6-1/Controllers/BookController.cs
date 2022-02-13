@@ -22,9 +22,16 @@ namespace SafeDevelopLesson_6_1.Controllers
           return Ok(_book.GetAll());
         }
         [HttpPost]
-        public IActionResult Add([FromBody]BookModel model)
+        public IActionResult Add([FromQuery]string Name, [FromQuery] double Price, [FromQuery] string Autor)
         {
-           _book.Create(model);
+            var book = new BookModel()
+            {
+                Name = Name,
+                Price = Price,
+                Autor = Autor
+
+            };
+           _book.Create(book);
            return Ok();
         }
         [HttpDelete]
