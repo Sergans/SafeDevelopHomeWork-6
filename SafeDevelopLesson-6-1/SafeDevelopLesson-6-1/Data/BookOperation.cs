@@ -6,32 +6,44 @@ namespace SafeDevelopLesson_6_1.Data
 {
     public class BookOperation : IBookService
     {
+        private readonly IMongoCollection<BookModel> _book;
+        public BookOperation(BookContext setting)
+        {
+            MongoClient client = new MongoClient(setting.ConnectionString);
+            IMongoDatabase database = client.GetDatabase(setting.DataBase);
+            _book= database.GetCollection<BookModel>(setting.Collection);
+        }
         public void Create(BookModel book)
         {
-            string connectionString = "mongodb://localhost:27017";
-            MongoClient client = new MongoClient(connectionString);
-            IMongoDatabase database = client.GetDatabase("test");
-            
+            _book.InsertOne(book);
         }
 
-        public void Delete(int id)
+        public void Delete(string id)
         {
-            throw new NotImplementedException();
+           _book.DeleteOne(book=>book.Id==id);
         }
 
         public List<BookModel> GetAll()
         {
-            throw new NotImplementedException();
+            return _book.Find(book => true).ToList();
         }
 
-        public BookModel GetById(int id)
+        public BookModel GetById(string id)
         {
-            throw new NotImplementedException();
+            var books = GetAll();
+            foreach (var book in books)
+            {
+                if (book.Id == id)
+                {
+                    return book;
+                }
+            }
+            return null;
         }
 
-        public void Update(BookModel book)
+        public void Update(string id,BookModel book)
         {
-            throw new NotImplementedException();
+           _book.ReplaceOne(book => book.Id == id,book);
         }
     }
 }

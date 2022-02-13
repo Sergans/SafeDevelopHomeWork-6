@@ -2,6 +2,7 @@
 using MongoDB.Bson;
 using MongoDB.Driver;
 using Microsoft.AspNetCore.Mvc;
+using SafeDevelopLesson_6_1.Models;
 
 namespace SafeDevelopLesson_6_1.Controllers
 {
@@ -12,10 +13,23 @@ namespace SafeDevelopLesson_6_1.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            string connectionString = "mongodb://localhost:27017";
-            MongoClient client = new MongoClient(connectionString);
-            IMongoDatabase database = client.GetDatabase("test");
-            return Ok(database);
+           
+            return Ok();
+        }
+        [HttpPost]
+        public IActionResult Add([FromBody]BookModel model)
+        {
+           return Ok();
+        }
+        [HttpDelete]
+        public IActionResult Delete()
+        {
+            return Ok();
+        }
+        [HttpPut]
+        public IActionResult UpDate()
+        {
+            return Ok();
         }
     }
 }
