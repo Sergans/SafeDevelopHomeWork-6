@@ -4,7 +4,7 @@ using MongoDB.Driver;
 using Microsoft.AspNetCore.Mvc;
 using SafeDevelopLesson_6_1.Models;
 using SafeDevelopLesson_6_1.Data;
-//using Nest;
+
 
 namespace SafeDevelopLesson_6_1.Controllers
 {
@@ -47,7 +47,7 @@ namespace SafeDevelopLesson_6_1.Controllers
             _book.Update(book.Id, book);
             return Ok();
         }
-        [HttpPost]
+        [HttpPost("post")]
         public IActionResult ElasticGet()
         {
             //var node = new Uri("http://localhost:9200");
