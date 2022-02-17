@@ -4,7 +4,7 @@ using MongoDB.Driver;
 using Microsoft.AspNetCore.Mvc;
 using SafeDevelopLesson_6_1.Models;
 using SafeDevelopLesson_6_1.Data;
-
+using Nest;
 
 namespace SafeDevelopLesson_6_1.Controllers
 {
@@ -48,12 +48,19 @@ namespace SafeDevelopLesson_6_1.Controllers
             return Ok();
         }
         [HttpPost("post")]
-        public IActionResult ElasticGet()
+        public IActionResult ElasticGet([FromQuery]string search)
         {
-            //var node = new Uri("http://localhost:9200");
-            //var settings = new ConnectionSettings(node);
-            //var client = new ElasticClient(settings);
-            return Ok();
+            var books = _book.GetAll();
+            var node = new Uri("http://localhost:9200/");
+            var settings = new ConnectionSettings(node);
+
+            var client = new ElasticClient(settings.DefaultIndex("people"));
+            var response=client.IndexMany(books);
+
+            var searchresponse = client.Search<BookModel>(s => s.AllIndices().From(0).Size(10).Query(q=>q.Match(m=>m.Field(f=>f.Autor).Query(search))));
+            var bk = searchresponse.Documents;
+
+            return Ok(bk);
         }
     }
 }
