@@ -27,6 +27,7 @@ namespace SafeDevelopLesson_6_1.Data
         {
             _client.IndexDocument(book);
         }
+       
         
 
     }
