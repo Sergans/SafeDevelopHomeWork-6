@@ -4,6 +4,7 @@ using MongoDB.Driver;
 using Microsoft.AspNetCore.Mvc;
 using SafeDevelopLesson_6_1.Models;
 using SafeDevelopLesson_6_1.Data;
+using Nest;
 
 namespace SafeDevelopLesson_6_1.Controllers
 {
@@ -12,9 +13,11 @@ namespace SafeDevelopLesson_6_1.Controllers
     public class BookController : ControllerBase
     {
         private readonly BookOperation _book;
-        public BookController(BookOperation book)
+        private readonly SearchBook _searchBook;
+        public BookController(BookOperation book, SearchBook searchBook)
         {
             _book = book;
+            _searchBook = searchBook;
         }
         [HttpGet]
         public IActionResult Get()
@@ -32,6 +35,7 @@ namespace SafeDevelopLesson_6_1.Controllers
 
             };
            _book.Create(book);
+           _searchBook.AddDocument(book);
            return Ok();
         }
         [HttpDelete]
@@ -46,5 +50,11 @@ namespace SafeDevelopLesson_6_1.Controllers
             _book.Update(book.Id, book);
             return Ok();
         }
+        [HttpPost("search")]
+        public IActionResult Search([FromQuery]string search)
+        {
+          return Ok(_searchBook.Search(search));
+        }
+       
     }
 }
