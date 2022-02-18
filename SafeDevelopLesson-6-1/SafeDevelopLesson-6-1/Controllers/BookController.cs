@@ -13,9 +13,11 @@ namespace SafeDevelopLesson_6_1.Controllers
     public class BookController : ControllerBase
     {
         private readonly BookOperation _book;
-        public BookController(BookOperation book)
+        private readonly SearchBook _searchBook;
+        public BookController(BookOperation book, SearchBook searchBook)
         {
             _book = book;
+            _searchBook = searchBook;
         }
         [HttpGet]
         public IActionResult Get()
@@ -33,6 +35,7 @@ namespace SafeDevelopLesson_6_1.Controllers
 
             };
            _book.Create(book);
+           _searchBook.AddDocument(book);
            return Ok();
         }
         [HttpDelete]
@@ -47,20 +50,10 @@ namespace SafeDevelopLesson_6_1.Controllers
             _book.Update(book.Id, book);
             return Ok();
         }
-        [HttpPost("post")]
-        public IActionResult ElasticGet([FromQuery]string search)
+        [HttpPost("search")]
+        public IActionResult Search([FromQuery]string search)
         {
-            var books = _book.GetAll();
-            var node = new Uri("http://localhost:9200/");
-            var settings = new ConnectionSettings(node);
-
-            var client = new ElasticClient(settings.DefaultIndex("people"));
-            var response=client.IndexMany(books);
-
-            var searchresponse = client.Search<BookModel>(s => s.AllIndices().From(0).Size(10).Query(q=>q.Match(m=>m.Field(f=>f.Autor).Query(search))));
-            var bk = searchresponse.Documents;
-
-            return Ok(bk);
+          return Ok(_searchBook.Search(search));
         }
     }
 }
